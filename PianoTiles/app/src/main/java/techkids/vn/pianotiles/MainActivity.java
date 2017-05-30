@@ -17,8 +17,10 @@ import java.io.IOException;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private ImageView iv_w1, iv_w2, iv_w3, iv_w4, iv_w5, iv_w6, iv_w7, iv_b1, iv_b2, iv_b3, iv_b4, iv_b5;
+    private SoundPool soundPool;
+    private int sound_do;
 
-    private MediaPlayer mediaPlayer;
+   // private MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +41,14 @@ public class MainActivity extends AppCompatActivity {
         iv_b4 = (ImageView) findViewById(R.id.iv_b4);
         iv_b5 = (ImageView) findViewById(R.id.iv_b5);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            soundPool = new SoundPool.Builder().setMaxStreams(5).build();
+        }else {
+            soundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
+        }
+
+        sound_do = soundPool.load(this, R.raw.sound_1, 1);
+
         this.hideStatusBar();
         this.taptap();
     }
@@ -50,6 +60,9 @@ public class MainActivity extends AppCompatActivity {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         iv_w1.setImageResource(R.drawable.pressed_white_key);
+
+                        soundPool.play(sound_do, 1, 1, 0, 0, 1);
+
                         Log.d(TAG, "onTouch: do");
                         return true;
                     case MotionEvent.ACTION_UP:
